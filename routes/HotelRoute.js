@@ -1,0 +1,62 @@
+const express = require('express');
+const Path =express.Router();
+const authenticateJWT = require('../middleware/auth');
+var dateFormat = require('dateformat');
+var bodyParser = require('body-parser');
+const Hotel  = require('../model/Hotel');
+
+
+Path.use(bodyParser.json());
+Path.use(bodyParser.urlencoded());
+Path.use(bodyParser.urlencoded({ extended: true }));
+
+
+// ********************    CRUD   ******************
+
+// Add new Hotel
+// If you wanna protect your request add ' authenticateJWT '
+// Exemple get('/:id',authenticateJWT,async ..
+
+Path.post('/AddHotel', async (req, res) => {
+    let hotel = new Hotel({
+
+        title : req.body.title,
+        description: req.body.description,
+        adress: req.body.adress,
+        star: req.body.star,
+        phone: req.body.phone,
+        nbr_rooms: req.body.nbr_rooms,
+        coordinates : {
+            LAT: req.body.LAT,
+            LNG: req.body.LNG
+        }
+
+    });
+    try {
+        await hotel.save();
+        console.log(req.id);
+        res.json({status: "ok", message: 'Hotel added'});
+    } catch (err) {
+        res.json({message: err.message});
+    }
+});
+
+
+// Find Hotel by ID
+Path.get('/:id',async (req,res) => {
+    hotel = await Hotel.findOne({ _id : req.params.id});
+    if(!hotel)
+    {
+        console.log("Mafameech hotel");
+        return res.status(400).json({err:"not exist"});
+    }
+    else
+    {
+        console.log('hotel`s name is :  ',hotel.title);
+        return res.json(hotel);
+    }
+});
+
+
+module.exports=Path;
+
