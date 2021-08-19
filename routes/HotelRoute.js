@@ -34,13 +34,31 @@ Path.post('/AddHotel', async (req, res) => {
     });
     try {
         await hotel.save();
-        console.log(req.id);
-        res.json({status: "ok", message: 'Hotel added'});
+        hotels = await Hotel.find();
+
+        res.json({status: "ok", message: 'Hotel added' , data:hotels});
     } catch (err) {
         res.json({message: err.message});
     }
 });
 
+
+// All Reservations
+Path.get('/hotels',async (req,res) => {
+    // reservation = await Reservation.findOne({ _id : req.params.id});
+
+    hotels = await Hotel.find();
+
+    if(!hotels)
+    {
+        console.log("Mafameech reservation");
+        return res.status(400).json({err:"not exist"});
+    }
+    else
+    {
+        return res.json(hotels);
+    }
+});
 
 // Find Hotel by ID
 Path.get('/:id',async (req,res) => {

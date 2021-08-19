@@ -17,7 +17,6 @@ Path.use(bodyParser.urlencoded({ extended: true }));
 
 // Add new Reservation
 // If you wanna protect your request add ' authenticateJWT '
-// Exemple get('/:id',authenticateJWT,async ..
 
 Path.post('/AddReservation', authenticateJWT,async (req, res) => {
 
@@ -33,9 +32,32 @@ Path.post('/AddReservation', authenticateJWT,async (req, res) => {
     console.log(req.id);
     try {
         await reservation.save();
-        res.json({status: "ok", message: 'Reservation added'});
+        reservations = await Reservation.find({
+            user_booking : req.id
+        });
+
+        res.json({status: "ok", message: 'Reservation added', data : reservations});
     } catch (err) {
         res.json({message: err.message});
+    }
+});
+
+
+
+// All Reservations
+Path.get('/reservations',authenticateJWT,async (req,res) => {
+    reservations = await Reservation.find({
+        user_booking : req.id
+    });
+
+    if(!reservations)
+    {
+        console.log("Mafameech reservation");
+        return res.status(400).json({err:"not exist"});
+    }
+    else
+    {
+        return res.json(reservations);
     }
 });
 
