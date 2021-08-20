@@ -27,7 +27,9 @@ Path.post('/AddReservation', authenticateJWT,async (req, res) => {
         booking_date: Date.now(),
         arrival_date: req.body.arrival_date,
         departure_date: req.body.departure_date,
-        num_children: req.body.num_children
+        num_children: req.body.num_children,
+        num_adults: req.body.num_adults
+
     });
     console.log(req.id);
     try {

@@ -51,11 +51,12 @@ Path.get('/hotels',async (req,res) => {
 
     if(!hotels)
     {
-        console.log("Mafameech reservation");
+        console.log("Mafameech hotels");
         return res.status(400).json({err:"not exist"});
     }
     else
     {
+        console.log(" hotels");
         return res.json(hotels);
     }
 });
